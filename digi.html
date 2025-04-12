@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Time-Based Circle Color Stopwatch</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: black;
+      color: whitesmoke;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .stopwatch {
+      font-size: 2rem;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      margin-bottom: 30px;
+      transition: background-color 0.5s;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button.start { background: green; color: white; }
+    button.stop { background: red; color: white; }
+    button.reset { background: blue; color: white; }
+
+    button.start:hover { background: lime; }
+    button.stop:hover { background: orange; }
+    button.reset:hover { background: aqua; }
+  </style>
+</head>
+<body>
+  <div class="stopwatch" id="display">00:00:00</div>
+  <div class="buttons">
+    <button class="start" onclick="start()">Start</button>
+    <button class="stop" onclick="stop()">Stop</button>
+    <button class="reset" onclick="reset()">Reset</button>
+  </div>
+
+  <script>
+    let timer;
+    let seconds = 0;
+    let isRunning = false;
+
+    function formatTime(sec) {
+      const hrs = String(Math.floor(sec / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+      const secs = String(sec % 60).padStart(2, '0');
+      return `${hrs}:${mins}:${secs}`;
+    }
+
+    function updateDisplay() {
+      const display = document.getElementById("display");
+      display.textContent = formatTime(seconds);
+      updateCircleColor(seconds);
+    }
+
+    function updateCircleColor(sec) {
+      const display = document.getElementById("display");
+
+      if (sec < 3) {
+        display.style.backgroundColor = "#1E90FF"; // Blue
+      } else if (sec < 10) {
+        display.style.backgroundColor = "#32CD32"; // Green
+      } else if (sec < 18) {
+        display.style.backgroundColor = "#FFD700"; // Gold
+      } else if (sec < 20) {
+        display.style.backgroundColor = "#FF4500"; // Red-Orange
+      } else {
+        display.style.backgroundColor = "#800080"; // Purple
+      }
+    }
+
+    function start() {
+      if (!isRunning) {
+        isRunning = true;
+        timer = setInterval(() => {
+          seconds++;
+          updateDisplay();
+        }, 1000);
+      }
+    }
+
+    function stop() {
+      clearInterval(timer);
+      isRunning = false;
+    }
+
+    function reset() {
+      stop();
+      seconds = 0;
+      updateDisplay();
+      document.getElementById("display").style.backgroundColor = "#222"; // default
+    }
+
+    // Initialize
+    updateDisplay();
+  </script>
+</body>
+</html>
+
+
+
